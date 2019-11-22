@@ -1,8 +1,15 @@
 const express = require('express');
 
-function createActions({  }) {
-  function recordViewing(correlationId, videoId) {
-    return Promise.resolve(true)
+function createActions({ messageStore }) {
+  function recordViewing(correlationId, videoId, userId) {
+    const stream = `viewings-${videoId}`;
+    const viewedEvent = {
+      type: 'VideoViewed',
+      correlationId,
+      userId,
+      payload: { videoId }
+    };
+    return messageStore.write(stream, viewedEvent);
   }
 
   return {
@@ -22,8 +29,8 @@ function createHandlers({ actions }) {
   };
 }
 
-function createRecordViewings({}) {
-  const actions = createActions({});
+function createRecordViewings({ messageStore }) {
+  const actions = createActions({ messageStore });
   const handlers = createHandlers({ actions });
 
   const router = express.Router();

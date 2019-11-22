@@ -6,12 +6,14 @@ function createConfig({ env }) {
   const db = createDb({
     connectionString: env.databaseUrl
   });
+  const messageStore = createMessageStore({ db });
   const homeApp = createHomeApp({ db });
-  const recordViewingsApp = createRecordViewingsApp({ db });
+  const recordViewingsApp = createRecordViewingsApp({ messageStore });
 
   return {
     env,
     db,
+    messageStore,
     homeApp,
     recordViewingsApp,
   }
